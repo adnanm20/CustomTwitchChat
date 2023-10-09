@@ -7,7 +7,7 @@
 const WebSocketClient = require("websocket").client;
 const fs = require("fs");
 const path = require("path");
-const auth = require("./auth.json");
+const auth = require("./authtest.json");
 
 if(auth.access_token == "" || auth.username == "") {
 	console.log("Insert access token and username in auth.json");
@@ -28,11 +28,16 @@ client.on('connect', function (connection) {
 	connection.sendUTF('NICK ' + auth.username);
 
 	connection.on("message", message => {
-		console.log(message.utf8Data);
-		console.log(parser(message.utf8Data));
+		// console.log(message.utf8Data);
+		msgObjs = parser(message.utf8Data);
+		msgObjs.forEach(msgObj => {
+			if(msgObj.cmd == "PRIVMSG") {
+				console.log(msgObj.msg);
+			}
+		})
 	});
 
-	connection.sendUTF("JOIN #blastpremier")
+	connection.sendUTF("JOIN #xqc")
 
 });
 
@@ -43,25 +48,28 @@ function parser(messageText) {
 	mesages.forEach(msg => {
 		if(msg.length == 0) return;
 		let obj = {};
+		// console.log(msg);
 		let re = /(^|\s)([A-Z\*\s0-9]+)(\s|$)/;
+		// console.log(msg.match(re));
 		obj.cmd = msg.match(re)[2];
-		let a = msg.split(":");
+		let a = msg.split(" :");
+		// console.log(a);
 
 		switch(obj.cmd) {
 			case("PING"):
 				break;
 			case("PRIVMSG"):
 				obj.tags = a[0].split(";");
-				obj.username = a[0].match(new RegExp("display-name=([^\s]+)"))[1];
+				obj.username = a[0].match(/display-name=([^\s]+);emotes/)[1];
 				obj.msg = a[2];
 				break;
 			case("CLEARCHAT"):
 				obj.tags = a[0].split(";");
 				obj.username = a[2];
 				break;
-			//TODO: other cmds
 			default:
 		}
+		// console.log(a);
 		objs.push(obj);
 	});
 
