@@ -29,10 +29,13 @@ client.on('connect', function (connection) {
 
 	connection.on("message", message => {
 		// console.log(message.utf8Data);
-		msgObjs = parser(message.utf8Data);
-		msgObjs.forEach(msgObj => {
-			if(msgObj.cmd == "PRIVMSG") {
-				console.log(msgObj.msg);
+		parsedMessages = parser(message.utf8Data);
+		parsedMessages.forEach(parsedMessage => {
+			if(parsedMessage.cmd == "PING"){
+				connection.sendUTF("PONG");
+			}
+			else if(parsedMessage.cmd == "PRIVMSG") {
+				console.log(parsedMessage.msg);
 			}
 		})
 	});
