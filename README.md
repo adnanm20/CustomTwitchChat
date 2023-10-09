@@ -4,7 +4,7 @@ Fully customizable Twitch chat using NodeJS and Twitch API
 
 ## Requirements
 
-- [https://nodejs.org/en](NodeJS)
+- [NodeJS](https://nodejs.org/en)
 - NPM
 
 ## Usage
