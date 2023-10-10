@@ -86,7 +86,6 @@ function parser(messageText) {
 				break;
 			default:
 		}
-		// console.log(a);
 		objs.push(obj);
 	});
 
