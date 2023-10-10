@@ -28,19 +28,19 @@ client.on('connect', function (connection) {
 	connection.sendUTF('NICK ' + auth.username);
 
 	connection.on("message", message => {
-		// console.log(message.utf8Data);
+		console.log(message.utf8Data);
 		parsedMessages = parser(message.utf8Data);
 		parsedMessages.forEach(parsedMessage => {
 			if(parsedMessage.cmd == "PING"){
 				connection.sendUTF("PONG");
 			}
 			else if(parsedMessage.cmd == "PRIVMSG") {
-				console.log(parsedMessage.msg);
+				console.log(parsedMessage);
 			}
 		})
 	});
 
-	connection.sendUTF("JOIN #xqc")
+	connection.sendUTF("JOIN #ohnepixel")
 
 });
 
@@ -62,13 +62,27 @@ function parser(messageText) {
 			case("PING"):
 				break;
 			case("PRIVMSG"):
-				obj.tags = a[0].split(";");
+				obj.tags = parseTags(a[0]);
 				obj.username = a[0].match(/display-name=([^\s]+);emotes/)[1];
 				obj.msg = a[2];
 				break;
 			case("CLEARCHAT"):
 				obj.tags = a[0].split(";");
 				obj.username = a[2];
+				break;
+			case("NOTICE"):
+				break;
+			case("PART"):
+				break;
+			case("421"):
+				break;
+			case("CLEARMSG"):
+				break;
+			case(""):
+				break;
+			case(""):
+				break;
+			case(""):
 				break;
 			default:
 		}
@@ -77,6 +91,17 @@ function parser(messageText) {
 	});
 
 	return objs;
+}
+
+function parseTags(tagsText) {
+	let tagsObj = {};
+	let tags = tagsText.split(";");
+	tags.forEach(tag => {
+		let t = tag.split("=");
+		tagsObj[t[0]] = t[1];
+	});
+
+	return tagsObj;
 }
 
 client.connect('ws://irc-ws.chat.twitch.tv:80');
