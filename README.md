@@ -14,7 +14,7 @@ First install all needed node modules
 ```bash
 npm install
 ```
-In the auth.json file insert necessary access code and twitch username. Access code can be acquired by following [https://dev.twitch.tv/docs/irc/authenticate-bot/#getting-an-access-token](Twitch instructions)
+In the auth.json file insert necessary access code and twitch username. Access code can be acquired by following  [Twitch instructions](https://dev.twitch.tv/docs/irc/authenticate-bot/#getting-an-access-token)
 
 Then start the program using
 
