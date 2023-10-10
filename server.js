@@ -26,6 +26,7 @@ client.on('connect', function (connection) {
 	connection.sendUTF('CAP REQ :twitch.tv/membership twitch.tv/tags twitch.tv/commands');
 	connection.sendUTF('PASS oauth:' + auth.access_token);
 	connection.sendUTF('NICK ' + auth.username);
+	connection.sendUTF("JOIN #tarik")
 
 	connection.on("message", message => {
 		console.log(message.utf8Data);
@@ -40,7 +41,6 @@ client.on('connect', function (connection) {
 		})
 	});
 
-	connection.sendUTF("JOIN #ohnepixel")
 
 });
 
@@ -63,7 +63,7 @@ function parser(messageText) {
 				break;
 			case("PRIVMSG"):
 				obj.tags = parseTags(a[0]);
-				obj.username = a[0].match(/display-name=([^\s]+);emotes/)[1];
+				obj.username = a[0].match(/display-name=([^\s^;]+)/)[1];
 				obj.msg = a[2];
 				break;
 			case("CLEARCHAT"):
